@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decós Hospital | Encerrar Chamado</title>
+  <link rel="stylesheet" href="/static/assets/style.css">
+  <link rel="icon" href="imagens/hospital_ico.ico" type="image/x-icon">
+</head>
+
+<body>
+  <main class="container">
+    <div class="logo">
+      <img src="/static/imagens/logo.png" alt="Logo Decós">
+    </div>
+
+    <h1 class="title">Encerrar Chamado</h1>
+
+    <div class="field">
+      <label for="description">Descrição:<br></label>
+      <input class="fullwidth" type="text" id="description" size="1000" readonly>
+    </div>
+
+    <div class="field">
+      <label for="damage">Solução:</label>
+      <textarea class="fullwidth" id="damage" rows="7" required></textarea>
+    </div>
+
+    <button onclick="realizarEncerramento()" class="button">Encerrar</button>
+  </main>
+
+  <script>
+
+    const storedDescription = localStorage.getItem('description');
+
+    if (storedDescription !== null && storedDescription !== 'undefined') {
+      document.getElementById('description').value = storedDescription;
+    }
+
+    function realizarEncerramento() {
+      // Obter o valor do campo description e damage
+      const descriptionValue = storedDescription;
+      const damageValue = document.getElementById('damage').value.trim();
+
+      console.log('chamado descricao: ', descriptionValue)
+    
+      if (damageValue === '') {
+        alert('Por favor, preencha a solução!');
+        return;
+      }
+
+      // Realizar a requisição para verificar e atualizar o ds_dano_breve
+      fetch('http://10.222.1.25:5501/verificar_e_atualizar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ds_dano_breve: storedDescription,
+          ds_solucao: damageValue,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Ocorreu um problema ao encerrar o chamado.');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          alert(data.message); // Exibe a mensagem de sucesso
+          window.location.href = '1.homepage.html'; // Redireciona para a homepage
+        })
+        .catch((error) => {
+          alert(error.message); // Exibe qualquer erro
+        });
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,200 @@
+:root {
+  --background: #f0f8ff;
+  --primary: #af1f2c;
+  --accent: #8b1f1f;
+  --text: #010002;
+  --focus-background: #e0e0f8;
+  --upper-shadow: inset 2px 2px 2px rgba(180, 71, 71, 0.966);
+  --lower-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+input,
+textarea,
+select,
+button {
+  font-size: inherit;
+  color: inherit;
+  font-family: inherit;
+}
+
+body {
+  background-color: var(--background);
+  font-family: sans-serif;
+  color: var(--text);
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+  display: grid;
+  gap: 3rem;
+}
+
+.title,
+.logo {
+  text-align: center;
+}
+
+.button {
+  text-decoration: none;
+  color: var(--text);
+  background-color: white;
+  padding: 0.3rem 0.6rem;
+  border: none;
+  border-radius: 5px;
+  box-shadow: var(--upper-shadow);
+  cursor: pointer;
+  transition: all 0.1s;
+  justify-self: center;
+}
+
+.button:hover {
+  color: white;
+  background-color: var(--accent);
+  box-shadow: none;
+}
+
+.form {
+  max-width: 500px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.fullwidth {
+  justify-self: stretch;
+  width: 100%;
+}
+
+.field > label {
+  font-weight: bold;
+}
+
+.field input:not([type="radio"]),
+.field textarea,
+.field select {
+  border: 1px solid var(--accent);
+  padding: 0.2rem;
+  border-radius: 5px;
+  box-shadow: var(--lower-shadow);
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  background-color: var(--focus-background);
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1rem;
+}
+
+.form button {
+  margin-top: 2rem;
+}
+
+/*--------------------------------------------------------------------------------------*/
+.botao1 {
+  font-size: 1em;
+  background: #fafafa;
+  color: #000000;
+  box-shadow: inset 2px 2px 2px rgba(180, 71, 71, 0.966);
+  border: 15px;
+  padding: 0.5em 1em;
+  text-shadow: 1px 1px 1px rgb(255, 255, 255);
+  border-radius: 15px;
+  margin: 5% auto; /* Define margem superior e inferior automática e centraliza horizontalmente */
+  display: block; /* Torna o botão um elemento de bloco */
+  text-align: center; /* Centraliza o texto */
+}
+
+/* Elemento de classe "botao" */
+.botao2 {
+  font-size: 1em;
+  background: #fafafa;
+  color: #000000;
+  box-shadow: inset 2px 2px 2px rgba(180, 71, 71, 0.966);
+  border: 15px;
+  padding: 0.5em 1em;
+  text-shadow: 1px 1px 1px rgb(255, 255, 255);
+  border-radius: 10px;
+  margin: 5% auto; 
+  display: block; 
+  text-align: center; 
+}
+
+/* Elemento de classe "botao" com o estado da pseudoclasse "hover" */
+.botao2:hover {
+  background: #942525;
+  box-shadow: inset 2px 2px 2px rgba(148, 38, 38, 0.966);
+  text-shadow: none;
+  border-radius: 15px;
+  text-align: center;
+}
+
+
+/* Elemento de classe "botao" com o estado da pseudoclasse "hover" */
+.botao1:hover {
+  background: #942525;
+  box-shadow: inset 2px 2px 2px rgba(148, 38, 38, 0.966);
+  text-shadow: none;
+  border-radius: 15px;
+}
+
+
+#usuario {
+  padding: 0.2em 0.6em;
+  text-align: center;
+  margin-top: 40px;
+  margin-right: 12%;
+  border-radius: 15px;
+
+}
+
+/* Estilizando o label do usuário */
+label[for="usuario"] {
+  font-weight: bold;
+  color: #333;
+ 
+}
+
+.botao {
+  border-radius: 15px;
+}
+
+
+#captcha {
+  margin-top: 20px; /* Espaçamento acima do elemento */
+  font-family: Arial, sans-serif; /* Escolha de fonte */
+  margin-right: 20%;
+}
+
+#captcha label {
+  font-weight: bold; /* Deixa o texto em negrito */
+}
+
+#captcha input[type="text"] {
+  width: 80px; /* Largura do campo de texto */
+  padding: 5px; /* Espaçamento interno do campo de texto */
+  margin-left: 5px; /* Espaçamento à esquerda do campo de texto */
+  border: 1px solid #ccc; /* Borda do campo de texto */
+  border-radius: 4px; /* Bordas arredondadas */
+  box-sizing: border-box; /* Mantém o tamanho total do elemento */
+}
+

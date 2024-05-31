@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decós Hospital | Abertura de Ordem de Serviço</title>
+  <link rel="stylesheet" href="/static/assets/style.css">
+  <link rel="icon" href="imagens/hospital_ico.ico" type="image/x-icon">
+</head>
+
+<body>
+  <main class="container">
+    <div class="logo">
+      <img src="/static/imagens/logo.png" alt="Logo Decós">
+    </div>
+
+    <h1 class="title">Central de Abertura de Chamado</h1>
+
+    <!-- Formulário para enviar os dados -->
+    <form class="form" id="orderForm">
+      <div class="field">
+        <label for="location">Localização:</label>
+        <select id="location" name="nr_seq_localizacao" required>
+          <option value="122">Endoscopia</option>
+          <option value="105">Centro Cirúrgico</option>
+          <option value="123">Recepção</option>
+        
+        
+        </select>
+      </div>
+
+      <!-- Formulário dos usuários -->
+      <div class="field">
+        <label for="user">Usuário Solicitante: </label>                                                         <!-- INT - INTERNAMENTO  -->
+        <select id="user" name="username" required>                                                             <!-- END - ENDOSCOPIA  -->
+          <option value="0">Selecione o usuário</option>                                                         <!-- CC - CENTRO CIRURGICO  -->
+          <option value="151346"> INT - Alessandra Ignacio Costa</option>                                         <!-- RCM - RECEPÇAO CENTRO MEDICO  -->
+          <option value="65861"> CC - Camilla de Assunção Santos Barreto</option>                                  <!-- RDC- RECEPÇÃO DECOS  -->
+          <option value="96547"> INT - Elyne Araújo Santos Fonseca</option>                                        <!-- RED - RECEPÇÃO ENDOSCOPIA  -->
+          <option value="190050"> END - Gilmaria Nunes de Aquino Carvalho</option>
+          <option value="21610"> INT - Jussara da Cruz Santos</option>
+          <option value="174254"> INT - Mariana Teles de Oliveira</option>
+          <option value="179749"> INT - Sabrina Souza Lima</option>
+          <option value="186214"> CC - Sheisa Alves de Barros Correa</option> 
+          <option value="93796">  END - Stefanny Maria Campos</option>
+          <option value="128702"> RCM - Hilka Freire Evangelista</option>
+          <option value="130702"> RDC - Mychel Douglas do Espírito Santo</option>
+          <option value="133950"> RED -Julio Cardoso dos Santos Filho</option>
+          <option value="179079"> R - Nayahne Santos de jesus</option>
+          <option value="64933"> RCM - Larissa Maria Santos Costa </option>
+          <option value="185980"> RCM - Karine Amanda de Jesus</option>
+          <option value="181055"> RCM - Cintia Araujo dos Santos</option>
+          <option value="186916"> RCM - Nivea Regina Lima Araujo Bastos</option>
+          <option value="136404"> RCM - Rafael Marques da Silva</option>
+          <option value="145480"> RCM - Dinara Jessica da Rocha Santos</option>
+          <option value="161178"> RCM - Tamilla Cruz de Azevedo Andrade</option>
+
+        </select>
+      </div> 
+
+      <div class="field">
+        <label for="description">Descrição:</label>
+        <input class="fullwidth" type="text" id="description" size="1000" required>
+      </div>
+
+      <div class="field">
+        <label for="damage">Dano:</label>
+        <textarea class="fullwidth" id="damage" rows="7" required></textarea>
+      </div>
+
+      <button class="button" type="button" onclick="enviarOrdem()">Enviar</button>
+    </form>
+  </main>
+
+  <!-- Script para enviar os dados para o backend -->
+  <script>
+    const firstScreenVisited = localStorage.getItem('firstScreenVisited');
+    if (!firstScreenVisited) {
+      window.location.href = '1.homepage.html'
+    }
+
+    function armazenarDescricao() {
+      const descriptionValue = document.getElementById('description').value.trim();
+      localStorage.setItem('chamadoDescricao', descriptionValue);
+      return descriptionValue;
+    }
+
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    };
+
+    async function enviarOrdem() {
+      const descricaoCriada = armazenarDescricao();
+      const form = document.getElementById('orderForm');
+
+      const location = form.elements.nr_seq_localizacao.value;
+      const username = form.elements.username.value; //obtem o valor do campo usuario
+      const ds_dano_breve = form.elements.description.value;
+      const ds_dano = form.elements.damage.value;
+
+      console.log('Descrição ao criar chamado:', descricaoCriada);
+
+      const data = {
+        nr_seq_localizacao: parseInt(location),
+        cd_pessoa_solicitante: parseInt(username), // convert para inteiro 
+        ds_dano_breve,
+        ds_dano,
+      };
+
+      try {
+        const response = await fetch('http://10.222.1.80:5502/criar_ordem_servico/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            window.location.href = "3.mensagem_final.html";
+        } else {
+          console.error('Erro ao enviar os dados');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    }
+  </script>
+
+</body>
+
+</html>

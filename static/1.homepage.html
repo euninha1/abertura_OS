@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/static/assets/style.css" media="screen">
+  <link rel="icon" href="imagens/hospital_ico.ico" type="image/x-icon">
+  <title>Decós Hospital | Abertura de Ordem de Serviço</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="/static/imagens/logo.png" alt="Logo Decós">
+    </div>
+    <div class="title">
+      <h1 id="titulo1">Bem-vindo à página de abertura de Ordem de Serviço!</h1>
+      <form id="userForm">
+        <label for="usuario">Usuário:</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required>
+
+        <div id="captcha">
+          <label for="soma">Validação:</label>
+          <span id="num1"></span> + <span id="num2"></span> =
+          <input type="text" id="soma" name="soma" placeholder="soma" required>
+        </div>
+
+        <div>
+          <button class="botao1" type="button" onclick="validarUsuario()">Validar usuário</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <script>
+    // Função para gerar números aleatórios entre 1 e 50
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    };
+    //Gerando números aleatórios 
+    const num1 = getRandomInt(1, 50);
+    const num2 = getRandomInt(1, 50);
+
+    document.getElementById('num1').textContent = num1;
+    document.getElementById('num2').textContent = num2;
+
+    function validarUsuario() {
+      localStorage.setItem('firstScreenVisited', 'true');
+      const usuario = document.getElementById('usuario').value;
+      const soma = parseInt(document.getElementById('soma').value);
+      const resultadoSoma = num1 + num2;
+
+      if (soma === resultadoSoma) {
+        fetch('http://10.222.1.25:5501/validate_user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "username": usuario
+          }),
+        })
+          .then(response => {
+            if (response.status === 404) {
+              throw new Error('Usuário inválido');
+            }
+            if (!response.ok) {
+              throw new Error('Erro ao processar a solicitação');
+            }
+            window.location.href = '2.pagina_chamado.html';
+          })
+          .catch(error => {
+            alert(error.message);
+          });
+      } else {
+        alert('A soma está incorreta. Tente novamente.');
+      }
+    }
+  </script>
+</body>
+
+</html>

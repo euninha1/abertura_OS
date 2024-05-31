@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decós Hospital | Abertura de Ordem de Serviço</title>
+  <link rel="stylesheet" href="/static/assets/style.css">
+  <link rel="icon" href="imagens/hospital_ico.ico" type="image/x-icon">
+</head>
+
+<body>
+  <main class="container">
+    <div class="logo">
+      <img src="/static/imagens/logo.png" alt="Logo Decós">
+    </div>
+    <h1 id="titulo">Ordem de serviço aberta com sucesso!</h1>
+    <div class="logo">
+      <img src="/static/imagens/verificado.png" alt="Logo Decós">
+    </div>
+
+    <div>
+      <button onclick="redirectToHomepage()" class="botao1">Voltar para a Página Inicial</button>
+
+      <button onclick="fecharChamado()" class="botao2">Fechar Chamado</button>
+    </div>
+
+  </main>
+
+  <script>
+    function redirectToHomepage() {
+      window.location.href = "1.homepage.html";
+    }
+
+    function fecharChamado() {
+      window.location.href = "4.fechar_chamado.html"; // Redireciona para a página para fechar o chamado
+    }
+
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', function (event) {
+      history.pushState(null, null, location.href);
+      event.preventDefault();
+      alert("Voltar ou avançar não é permitido nesta página.");
+    });
+  </script>
+
+</body>
+
+</html>
