@@ -19,9 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-oracle_user = 'abertura_os'
-oracle_password = 'Dti*dec*++os@'
-oracle_dsn = '10.222.0.17:1521/medbd.set.edu.br'
+oracle_user = 'nome'
+oracle_password = 'senha'
+oracle_dsn = 'endereco'
 
 class OrdemServico(BaseModel):
     nr_seq_localizacao: int
