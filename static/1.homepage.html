@@ -29,34 +29,44 @@
         <div>
           <button class="botao1" type="button" onclick="validarUsuario()">Validar usuário</button>
         </div>
-
       </form>
     </div>
   </div>
+
+  <footer class="motivation-footer">
+    <p>"A cada chamado concluído, damos um passo à frente na qualidade do atendimento. Juntos, podemos transformar o cuidado em excelência!"</p>
+  </footer>
+
   <script>
-    // Função para gerar números aleatórios entre 1 e 50
+    
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    
     history.pushState(null, null, location.href);
     window.onpopstate = function () {
       history.go(1);
     };
-    //Gerando números aleatórios 
+
+   
     const num1 = getRandomInt(1, 50);
     const num2 = getRandomInt(1, 50);
 
     document.getElementById('num1').textContent = num1;
     document.getElementById('num2').textContent = num2;
 
+
+
     function validarUsuario() {
       localStorage.setItem('firstScreenVisited', 'true');
       const usuario = document.getElementById('usuario').value;
       const soma = parseInt(document.getElementById('soma').value);
       const resultadoSoma = num1 + num2;
-
+      
       if (soma === resultadoSoma) {
+        localStorage.setItem('username', usuario); 
+
         fetch('http://10.222.1.25:5501/validate_user', {
           method: 'POST',
           headers: {
@@ -66,22 +76,22 @@
             "username": usuario
           }),
         })
-          .then(response => {
+        .then(response => {
             if (response.status === 404) {
-              throw new Error('Usuário inválido');
+                throw new Error('Usuário inválido');
             }
             if (!response.ok) {
-              throw new Error('Erro ao processar a solicitação');
+                throw new Error('Erro ao processar a solicitação');
             }
             window.location.href = '2.pagina_chamado.html';
-          })
-          .catch(error => {
+        })
+        .catch(error => {
             alert(error.message);
-          });
-      } else {
+        });
+    } else {
         alert('A soma está incorreta. Tente novamente.');
-      }
     }
+}
   </script>
 </body>
 

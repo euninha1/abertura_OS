@@ -1,173 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Decós Hospital | Abertura de Ordem de Serviço</title>
-  <link rel="stylesheet" href="/static/assets/style.css">
-  <link rel="icon" href="imagens/hospital_ico.ico" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decós Hospital | Abertura de Ordem de Serviço</title>
+    <link rel="stylesheet" href="/static/assets/style.css">
+    <link rel="icon" href="/static/imagens/hospital_ico.ico" type="image/x-icon">
 </head>
-
 <body>
-  <main class="container">
-    <div class="logo">
-      <img src="/static/imagens/logo.png" alt="Logo Decós">
-    </div>
-
-    <h1 class="title">Central de Abertura de Chamado</h1>
-
-    <!-- Formulário para enviar os dados -->
-    <form class="form" id="orderForm">
-      <div class="field">
-        <label for="location">Localização:</label>
-        <select id="location" name="nr_seq_localizacao" required onchange="filtrarUsuarios()">
-          <option value="">Selecione a localização</option>
-          <option value="105">Centro Cirúrgico</option>
-          <option value="111">Tecnologia da Informação</option>
-          <option value="123">Recepção</option>
-          <option value="122">Endoscopia</option>
-        </select>
-      </div>
-
-      <!-- Formulário dos usuários -->
-      <div class="field">
-        <label for="user">Usuário Solicitante:</label>
-        <select id="user" name="username" required>
-          <option value="">Selecione o usuário</option>
-          <!-- Opções de usuário serão preenchidas dinamicamente pelo JavaScript -->
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="description">Descrição:</label>
-        <input class="fullwidth" type="text" id="description" size="1000" required>
-      </div>
-
-      <div class="field">
-        <label for="damage">Dano:</label>
-        <textarea class="fullwidth" id="damage" rows="7" required></textarea>
-      </div>
-
-      <button class="button" type="button" onclick="enviarOrdem()">Enviar</button>
-    </form>
-  </main>
-
-  <!-- Script para enviar os dados para o backend e filtrar os usuários -->
-  <script>
-
-    const firstScreenVisited = localStorage.getItem('firstScreenVisited');
-    if (!firstScreenVisited) {
-      window.location.href = '1.homepage.html';
-    }
-
-    const usuariosPorSetor = {
-      "105": [
-        { value: "65861", text: "Camilla de Assunção Santos Barreto" },
-        { value: "186214", text: "Sheisa Alves de Barros Correa" },
-        { value: "203787", text:  "Malu Alcantara Oliveira"},
-        { value: "112169", text:  "Brenda Caroline Santos da Costa "},
-        { value: "200225", text:  "Elayne Oliveira Borges "}
-        // Centro Cirúrgico 
-      ],
-      "111": [
-        { value: "112206", text: "Mateus Lima de Oliveira" },
-        { value: "46430", text: "Matheus Teles Dantas Barros" },
-        { value: "134173", text: "Fernanda Amaral de Souza" },
-        { value: "147979", text:  "Phillip José de Oliveira Matos"},
-        { value: "13033", text:  "Carlos Wagner Santos de Oliveira"}
-        //  TIC
-      ],
-      "123": [
-        { value: "128702", text: "Hilka Freire Evangelista" },
-        { value: "133950", text: "Julio Cardoso dos Santos Filho" },
-        { value: "181055", text:  "Cintia Araujo dos Santos"},
-        { value: "186916", text:  "Nivea Regina Lima Araujo Bastos"},
-        { value: "136404", text:  "Rafael Marques da Silva"},
-        { value: "130702", text:  "Mychel Douglas do Espírito Santo"}
-        //Recepção 
-      ],
-      "122": [
-        { value: "93796", text: "Stefanny Maria campos" },
-        { value: "190050", text: "Gilmaria Nunes de Aquino Carvalho"},
-        { value: "171303", text: "Daniela Alves Rezende Menezes"},
-        { value: "25175", text: "Evellyn Maiara Santos Azevedo"}
-        // Endoscopia 
-      ]
-    };
-
-    function filtrarUsuarios() {
-      const location = document.getElementById('location').value;
-      const usersSelect = document.getElementById('user');
-      usersSelect.innerHTML = '<option value="">Selecione o usuário</option>'; // Limpa as opções
-
-      if (location && usuariosPorSetor[location]) {
-        usuariosPorSetor[location].forEach(user => {
-          const option = document.createElement('option');
-          option.value = user.value;
-          option.textContent = `${user.text}`;
-          usersSelect.appendChild(option);
-        });
-      }
-    }
-
-    function armazenarDescricao() {
-        const descriptionValue = document.getElementById('description').value.trim();
-        localStorage.setItem('description', descriptionValue);
-        console.log('Descricao armazenada:', descriptionValue);
-        return descriptionValue;
-      }
-    async function enviarOrdem() {
-      const form = document.getElementById('orderForm');
-      if (!form.checkValidity()) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return;
-      }
-
-      const descricaoCriada = armazenarDescricao();
-      console.log('Descrição criada:', descricaoCriada);
-
-      const location = form.elements.nr_seq_localizacao.value;
-      const username = form.elements.username.value;
-      const ds_dano = form.elements.damage.value;
-
-      const data = {
-        nr_seq_localizacao: parseInt(location),
-        cd_pessoa_solicitante: parseInt(username),
-        ds_dano_breve: descricaoCriada, // Utilize a descrição armazenada
-        ds_dano,
-      };
-
-      console.log('Data being sent:', data); // Adicionado para depuração
-
-      try {
-        const response = await fetch('http://10.222.1.25:5501/criar_ordem_servico/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+    <main class="container">
+        <div class="logo">
+            <img src="/static/imagens/logo.png" alt="Logo Decós">
+        </div>
+        <h1 class="title">Central de Abertura de Chamado</h1>
+        <form class="form" id="orderForm">
+            <div class="field">
+                <label for="user">Usuário Solicitante:</label>
+                <select id="user" name="username" required>
+                    <option value="">Selecione o usuário</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="location">Localização:</label>
+                <select id="location" name="nr_seq_localizacao" required>
+                    <option value="">Selecione a Localização</option>
+                </select>
+            <div class="field">
+                <label for="equipament">Equipamento:</label>
+                <select id="equipament" name="nr_seq_equipamento" required>
+                    <option value="">Selecione o Equipamento</option>
+                    <option value="309">Sistemas e Inovações</option>
+                    <option value="303">Infraestrutura e Segurança</option>
+                </select>
+            </div>
+            </div>
+            <div class="field">
+                <label for="description">Descrição Breve:</label>
+                <input class="fullwidth" type="text" id="description" required>
+            </div>
+            <div class="field">
+                <label for="damage">Dano:</label>
+                <textarea class="fullwidth" id="damage" rows="7" required></textarea>
+            </div>
+            <button class="button" type="button" onclick="enviarOrdem()">Enviar</button>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchUsuarios();
+            fetchSetores();
         });
 
-        if (response.ok) {
-          window.location.href = "3.mensagem_final.html";
-        } else {
-          const errorMessage = await response.text();
-          console.error('Erro ao enviar os dados:', errorMessage);
-          alert('Erro ao enviar os dados: ' + errorMessage);
-        }
-      } catch (error) {
-        console.error('Erro:', error);
-        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-          alert('Não foi possível se conectar ao servidor. Por favor, verifique sua conexão com a internet e o endereço do servidor.');
-        } else {
-          alert('Erro ao enviar os dados. Por favor, tente novamente mais tarde.');
-        }
-      }
+        async function fetchUsuarios() {
+            const usersSelect = document.getElementById('user');
+            usersSelect.innerHTML = '<option value="">Selecione o usuário</option>'; // Limpa as opções
 
-    }
-  </script>
+            try {
+                const response = await fetch('http://10.222.1.25:5501/obter_usuarios');
+                if (response.ok) {
+                    const users = await response.json();
+                    users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.cd_pessoa_fisica;
+                        option.textContent = user.ds_usuario;
+                        usersSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Erro ao buscar os usuários:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
 
+        async function fetchSetores() {
+            const locationSelect = document.getElementById('location');
+            locationSelect.innerHTML = '<option value="">Selecione a Localização</option>'; // Limpa as opções
+
+            try {
+                const response = await fetch('http://10.222.1.25:5501/obter_setores');
+                if (response.ok) {
+                    const setores = await response.json();
+                    setores.forEach(setor => {
+                        const option = document.createElement('option');
+                        option.value = setor.cd_setor;
+                        option.textContent = setor.ds_localizacao;
+                        locationSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Erro ao buscar os setores:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function autoSelectEquipamento(locationValue) { 
+            const equipamentSelect = document.getElementById('equipament'); 
+            equipamentSelect.innerHTML = '<option value="">Selecione o Equipamento</option>';
+
+            if (locationValue === '309') { 
+                const option = document.createElement('option');
+                option.value = '309';
+                option.textContent = 'Equipamento de Sistemas'; 
+                equipamentSelect.appendChild(option);
+            } else if (locationValue === '303') { 
+               const option = document.createElement('option'); 
+               option.value = '303'; 
+               option.textContent = 'Equipamento de Infraestrutura'; 
+               equipamentSelect.appendChild(option);
+            }
+        }
+
+
+        function armazenarDescricao() {
+            const descriptionValue = document.getElementById('description').value.trim();
+            localStorage.setItem('description', descriptionValue);
+            return descriptionValue;
+        }
+
+        async function enviarOrdem() {
+            const form = document.getElementById('orderForm');
+            if (!form.checkValidity()) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const descricaoCriada = armazenarDescricao();
+            const username = form.elements.username.value;
+            const nr_seq_localizacao = form.elements.nr_seq_localizacao.value;
+            const nr_seq_equipamento = form.elements.nr_seq_equipamento.value;
+            const ds_dano_breve = descricaoCriada;
+            const ds_dano = form.elements.damage.value;
+
+            const data = {
+                cd_pessoa_solicitante: parseInt(username),
+                nr_seq_localizacao: parseInt(nr_seq_localizacao),
+                nr_seq_equipamento: parseInt(nr_seq_equipamento),
+                ds_dano_breve,
+                ds_dano
+            };
+
+            try {
+                const response = await fetch('http://10.222.1.25:5501/criar_ordem_servico', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (response.ok) {
+                    window.location.href = "3.mensagem_final.html";
+                } else {
+                    const errorMessage = await response.text();
+                    console.error('Erro ao enviar os dados:', errorMessage);
+                    alert('Erro ao enviar os dados: ' + errorMessage);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    alert('Não foi possível se conectar ao servidor. Por favor, verifique sua conexão com a internet e o endereço do servidor.');
+                } else {
+                    alert('Erro ao enviar os dados. Por favor, tente novamente mais tarde.');
+                }
+            }
+        }
+    </script>
 </body>
-
 </html>

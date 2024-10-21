@@ -198,3 +198,13 @@ label[for="usuario"] {
   box-sizing: border-box; /* Mantém o tamanho total do elemento */
 }
 
+.motivation-footer {
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-style: italic;
+  color: #333;
+}
